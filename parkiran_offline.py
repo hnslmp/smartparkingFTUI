@@ -45,8 +45,8 @@ model.load_weights(COCO_MODEL_PATH, by_name=True)
 # if not os.path.exists("./data"):
 #     os.makedirs("./data")
 
-VIDEO_SOURCE = "data/parkiran2.mp4"
-PARKING_REGIONS = "data/regionparkiranft.p"
+VIDEO_SOURCE = "data/out4.mp4"
+PARKING_REGIONS = "data/outputregions.p"
 with open(PARKING_REGIONS, 'rb') as f:
     parked_car_boxes = pickle.load(f)
 
@@ -105,18 +105,28 @@ cnt=0
 #                     int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 # out = cv2.VideoWriter("out.avi", video_FourCC, video_fps, video_size)
 
-# previous_time = 0
+print(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+print(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+
+previous_time = 0
 while video_capture.isOpened():
 
+
+
     # #Capture frame every 10s
-    # current_time = time.time()
-    # delta_time = current_time - previous_time
-    # if delta_time <= 10:
-    #     continue
-    # else:
-    #     previous_time = current_time
+    current_time = time.time()
+    delta_time = current_time - previous_time
+    if delta_time <= 20:
+        # print(delta_time)
+        # print("continue")
+        continue
+    else:
+        previous_time = current_time
+        # print(delta_time)
+        # print("didnt continue")
 
     success, frame = video_capture.read()
+    # frame = cv2.resize(frame, (1920, 1080))
     overlay = frame.copy()
     if not success:
         break
@@ -124,7 +134,8 @@ while video_capture.isOpened():
     rgb_image = frame[:, :, ::-1]
     results = model.detect([rgb_image], verbose=0)
     car_boxes = get_car_boxes(results[0]['rois'], results[0]['class_ids'])
-    if car_boxes:
+    
+    if car_boxes.any():
         overlaps = compute_overlaps(parked_car_boxes, car_boxes)
         cnt=0
         #print(overlaps)

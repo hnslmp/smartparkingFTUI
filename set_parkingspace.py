@@ -79,10 +79,16 @@ if __name__ == '__main__':
     print("> When you are done press 'b' to Exit the program\n")
     
     video_capture = cv2.VideoCapture(args.video_path)
+    # video_capture = cv2.VideoCapture(2)
+
+    # print(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    # print(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+
     cnt=0
     rgb_image = None
     while video_capture.isOpened():
         success, frame = video_capture.read()
+        # frame = cv2.resize(frame, (640, 480))
         if not success:
             break
         if cnt == 5:
