@@ -67,13 +67,13 @@ def compute_overlaps(parked_car_boxes, car_boxes):
         x1 = box[1]
         y2 = box[2]
         x2 = box[3]
-        
+
         p1 = (x1, y1)
         p2 = (x2, y1)
         p3 = (x2, y2)
         p4 = (x1, y2)
         new_car_boxes.append([p1, p2, p3, p4])
-    
+
     overlaps = np.zeros((len(parked_car_boxes), len(new_car_boxes)))
     for i in range(len(parked_car_boxes)):
         for j in range(car_boxes.shape[0]):
@@ -127,30 +127,30 @@ while(True):
         if success and frame is None:
           print("camera failed")
           break
-     
+
     cv2.imshow('output', frame)
-    overlay = frame.copy()    
+    overlay = frame.copy()
     rgb_image = frame[:, :, ::-1]
     results = model.detect([rgb_image], verbose=0)
     car_boxes = get_car_boxes(results[0]['rois'], results[0]['class_ids'])
-    
+
     if car_boxes.any():
         overlaps = compute_overlaps(parked_car_boxes, car_boxes)
         cnt=0
         #print(overlaps)
-        for parking_area, overlap_areas in zip(parked_car_boxes, overlaps):  
+        for parking_area, overlap_areas in zip(parked_car_boxes, overlaps):
             max_IoU_overlap = np.max(overlap_areas)
             if max_IoU_overlap < 0.15:
                 cv2.fillPoly(overlay, [np.array(parking_area)], (71, 27, 92))
                 free_space = True
                 cnt+=1
         cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
-    
-    
+
+
 
     print(cnt)
     # out.write(frame)
-    
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
