@@ -109,6 +109,9 @@ cnt=0
 #print(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
 #print(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
 
+
+
+
 previous_time = 0
 
 while(True):
@@ -120,7 +123,7 @@ while(True):
       continue
     else:
       previous_time = current_time
-      video_capture = cv2.VideoCapture(2)
+      video_capture = cv2.VideoCapture(0)
       if video_capture.isOpened():
         success, frame = video_capture.read()
         video_capture.release()
@@ -146,7 +149,10 @@ while(True):
                 cnt+=1
         cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
 
-
+    file = open("space.txt", "w")
+    cnt_str = repr(cnt)
+    file.write(cnt_str)
+    file.close()
 
     print(cnt)
     # out.write(frame)

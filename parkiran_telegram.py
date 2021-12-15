@@ -114,18 +114,19 @@ cnt=0
 #print(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
 
 previous_time = 0
-info_message = ''
+info_message = 'Belum dimulai'
 @bot.message_handler(commands=['info'])
 def info(message):
     bot.send_message(message.chat.id, info_message)
-bot.infinity_polling()
 
 while(True):
+    bot.polling()
     current_time = time.time()
     delta_time = current_time - previous_time
+
     if delta_time <= 3:
-      #print(delta_time)
-      #print("continue")
+      print(delta_time)
+      print("continue")
       continue
 
     previous_time = current_time
@@ -158,10 +159,13 @@ while(True):
     if cnt == 0:
         info_message = 'Halo! Berikut informasi ketersediaan parkir di Universitas Indonesia :\n1. Gedung Dekanat FTUI (Penuh)'
     info_message = 'Halo! Berikut informasi ketersediaan parkir di Universitas Indonesia :\n1. Gedung Dekanat FTUI\n\t\t- Tersedia : {}'.format(cnt)
-    #print(cnt)
+    print(cnt)
     # out.write(frame)
+    
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    
+
 video_capture.release()
 # out.release()
 cv2.destroyAllWindows()
