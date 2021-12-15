@@ -17,6 +17,7 @@ while(True):
     # reads frames from a camera 
     # ret checks return at each frame
     ret, frame = cap.read() 
+    print(ret)
   
     # Converts to HSV color space, OCV reads colors as BGR
     # frame is converted to hsv

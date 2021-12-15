@@ -95,7 +95,8 @@ def arrayShow (imageArray):
 
 alpha = 0.6
 # video_capture = cv2.VideoCapture(VIDEO_SOURCE)
-video_capture = cv2.VideoCapture(2)
+#video_capture = cv2.VideoCapture(2)
+#video_capture.set(cv2.CAP_PROP_BUFFERSIZE, 0)
 cnt=0
 
 # #Video Writer
@@ -105,32 +106,30 @@ cnt=0
 #                     int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 # out = cv2.VideoWriter("out.avi", video_FourCC, video_fps, video_size)
 
-print(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-print(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+#print(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+#print(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
 
 previous_time = 0
-while video_capture.isOpened():
 
-
-
-    # #Capture frame every 10s
+while(True):
     current_time = time.time()
     delta_time = current_time - previous_time
-    if delta_time <= 20:
-        # print(delta_time)
-        # print("continue")
-        continue
+    if delta_time <= 5:
+      #print(delta_time)
+      #print("continue")
+      continue
     else:
-        previous_time = current_time
-        # print(delta_time)
-        # print("didnt continue")
-
-    success, frame = video_capture.read()
-    # frame = cv2.resize(frame, (1920, 1080))
-    overlay = frame.copy()
-    if not success:
-        break
-
+      previous_time = current_time
+      video_capture = cv2.VideoCapture(2)
+      if video_capture.isOpened():
+        success, frame = video_capture.read()
+        video_capture.release()
+        if success and frame is None:
+          print("camera failed")
+          break
+     
+    cv2.imshow('output', frame)
+    overlay = frame.copy()    
     rgb_image = frame[:, :, ::-1]
     results = model.detect([rgb_image], verbose=0)
     car_boxes = get_car_boxes(results[0]['rois'], results[0]['class_ids'])
@@ -147,7 +146,7 @@ while video_capture.isOpened():
                 cnt+=1
         cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
     
-    cv2.imshow('output',frame)
+    
 
     print(cnt)
     # out.write(frame)
