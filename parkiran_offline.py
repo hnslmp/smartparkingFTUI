@@ -13,7 +13,6 @@ import mrcnn.config
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
 from pathlib import Path
-# from google.colab.patches import cv2_imshow
 import pickle5 as pickle
 
 from shapely.geometry import box
@@ -94,17 +93,7 @@ def arrayShow (imageArray):
     return Image(data=encoded.decode('ascii'))
 
 alpha = 0.6
-# video_capture = cv2.VideoCapture(VIDEO_SOURCE)
-#video_capture = cv2.VideoCapture(2)
-#video_capture.set(cv2.CAP_PROP_BUFFERSIZE, 0)
 cnt=0
-
-# #Video Writer
-# video_FourCC    = cv2.VideoWriter_fourcc('M','J','P','G')
-# video_fps       = video_capture.get(cv2.CAP_PROP_FPS)
-# video_size      = (int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH)),
-#                     int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-# out = cv2.VideoWriter("out.avi", video_FourCC, video_fps, video_size)
 
 #print(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
 #print(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -117,7 +106,6 @@ previous_time = 0
 while(True):
     current_time = time.time()
     delta_time = current_time - previous_time
-    #delta_camtime = current_time - previous_camtime
     if delta_time <= 5:
       #print(delta_time)
       #print("continue")
@@ -158,11 +146,9 @@ while(True):
     file.close()
 
     print(cnt)
-    # out.write(frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 video_capture.release()
-# out.release()
 cv2.destroyAllWindows()
