@@ -46,7 +46,7 @@ model.load_weights(COCO_MODEL_PATH, by_name=True)
 #     os.makedirs("./data")
 
 VIDEO_SOURCE = "data/out4.mp4"
-PARKING_REGIONS = "data/outputregions.p"
+PARKING_REGIONS = "data/testing.p"
 with open(PARKING_REGIONS, 'rb') as f:
     parked_car_boxes = pickle.load(f)
 
@@ -111,27 +111,30 @@ cnt=0
 
 
 
-
+video_capture = cv2.VideoCapture(1)
 previous_time = 0
 
 while(True):
     current_time = time.time()
     delta_time = current_time - previous_time
+    #delta_camtime = current_time - previous_camtime
     if delta_time <= 5:
       #print(delta_time)
       #print("continue")
       continue
     else:
       previous_time = current_time
-      video_capture = cv2.VideoCapture(0)
+      #video_capture = cv2.VideoCapture(1)
+      #time.sleep(5)
       if video_capture.isOpened():
         success, frame = video_capture.read()
-        video_capture.release()
+        #video_capture.release()
         if success and frame is None:
           print("camera failed")
           break
 
     cv2.imshow('output', frame)
+    cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
     overlay = frame.copy()
     rgb_image = frame[:, :, ::-1]
     results = model.detect([rgb_image], verbose=0)
